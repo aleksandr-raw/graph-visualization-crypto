@@ -14,11 +14,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
 ### `npm run build`
 
 Builds the app for production to the `build` folder.\
@@ -29,18 +24,83 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+# Тестовое задание: реализация графа связей
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Требования к технологиям:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Весь код должен быть написан на языке Typescript
+- Приложения должно быть реализовано на React с использованием функциональных компонентов и хуков
+- Использовать Redux или MobX для управления состоянием приложения
+- Для отрисовки самого графа использовать библиотеку **D3.js**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Тестовый сервер
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Для тестирования работы приложения можно использовать тестовый сервер. В качестве адресов блокчейна используются строки
+формата 0xXXXX, где X - 16-ричная цифра (0-9A-F).
 
-## Learn More
+Сервер содержит одну точку:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### POST /messages
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Запрос возвращает подграф по запрошенному адресу, а именно ноды и связи между ними. Возвращается, как нода для
+запрашиваемого адреса, так и для его контрагентов, то есть возвращается замкнутый граф.
+
+По каждой ноде (node) предоставляется:
+
+- id - сам адрес (его хэш)
+- type - тип адреса (возможные значения - user, cex, bridge
+- name - имя данное адресу (в случае если имени нет - пустая строка)
+- usdt_balance - баланс в долларах (usdt)
+- tokens - баланс в конкретных токенах. В структуре токен есть информация о имени токена, количестве и долларовом
+  эквиваленте.
+
+По каждой связи (link) предоставляется:
+
+- id - идентификатор связи (конкатенация адресов отправителя и получателя)
+- sender - адрес отправителя
+- receiver - адрес получаетеля
+- usdt_amount - сумма транзакций в долларах
+- tokens_amount - сумма транзакций в конкретных токенах (аналогично tokens в ноде)
+
+Важно отметить, что между некоторыми адресами возможно существования двусторонней связи.
+
+## Требования к функционалу
+
+1. Возможность открыть подграф для некоторого адреса следующими способами
+    1. С помощью ввода адреса в некоторое поле
+    2. С помощью дабл-клика по адресу уже представленному на графе (раскрыть адрес и показать его контрагентов)
+2. Граф должен рисоваться по следующему принципу:
+    1. Если исследуемого адреса еще нет на графе, для него выбирается свободное место
+    2. Ноды, которые уже отрисованы на графе, но при этом связаны с исследуемым адресом, НЕ ИЗМЕНЯЮТ своего положения.
+    3. Контрагенты, которые являются получателями средств с исследуемого адреса, находятся правее. Контрагенты, которые
+       являются отправителями средств на исследуемый адрес, находятся левее. В случае если контрагент как получал, так и
+       отправлял средства на исследуемый адрес, он располагается в зависимости от суммы этих транзакций. Если больше
+       получал, то как получатель, если больше отправлял, то как отправитель.
+       Пример:
+
+       ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/3ce076bf-6b9b-40f8-967c-418aa8880642/007c3b00-e3f4-46b1-99f8-2a97c17e81ee/Untitled.png)
+
+3. Информативность графа:
+    1. Ноды визуально должны нести информацию о типе адреса (разные цвета например)
+    2. Ноды должны иметь подписи содержащие основную информацию (адрес, имя, баланс)
+    3. Связи должны иметь подписи содержащие информацию о сумме связи. Необходима возможность переключить отображения
+       суммы связи в долларах или по токенам
+4. Группировка нод
+    1. Необходимо реализовать функционал группировки нод. То есть заменить несколько нод на одну ноду, которая
+       представляет собой всю группу. То есть, к примеру, баланс у этой группы будет равен сумме балансов входящих в нее
+       нод. Также важно, чтобы объединялись и связи (если какой-то адрес отправлял средства на несколько нод, входящих в
+       группу, то рисуется только одна связь до ноды группы, а не несколько)
+    2. Также необходимо, чтобы полученную группу в последующем можно было раскрыть, то есть вернуть обратно все ноды,
+       которые в нее входят
+5. Прочее
+    1. Передвижение по графу (панорамирование/зум)
+    2. Перемещение нод
+
+## Инструкции по отправке
+
+1. Создайте публичный репозиторий на GitHub для вашего проекта
+2. Регулярно коммитьте изменения, демонстрируя процесс разработки
+3. Добавьте [README.md](http://readme.md/) с инструкциями по установке и запуску проекта
+4. Пришлите ссылку на репозиторий после завершения работы
+
+Удачи в выполнении задания!
