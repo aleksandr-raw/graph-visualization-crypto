@@ -1,3 +1,5 @@
+import {SimulationLinkDatum, SimulationNodeDatum} from "d3";
+
 export interface Node {
     id: string;
     type: "user" | "cex" | "bridge";
@@ -23,4 +25,17 @@ export interface Link {
 export interface GraphData {
     nodes: Node[];
     links: Link[];
+}
+
+export interface TransformedNode extends Node, SimulationNodeDatum {
+}
+
+
+export interface TransformedLink extends Link, SimulationLinkDatum<TransformedNode> {
+}
+
+
+export interface TransformedGraphData {
+    nodes: TransformedNode[];
+    links: TransformedLink[];
 }
