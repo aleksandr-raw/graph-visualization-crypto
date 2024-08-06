@@ -17,13 +17,11 @@
 
 .controls-wrapper {
     display: flex;
-    flex-wrap: wrap;
-    min-height: var(--controls-height);
+    height: var(--controls-height);
     background-color: var(--main-bg-color);
     border-radius: var(--border-radius);
     align-items: center;
     gap: 10px;
-    margin: 5px;
     padding: 10px;
 }
 
@@ -34,12 +32,12 @@
         padding: 10px;
         border-radius: var(--border-radius-m);
         border: 1px solid dimgray;
-        width: 200px;
+        width: 180px;
     }
 
     & .clear-btn {
         position: absolute;
-        right: 20px;
+        right: 10px;
         top: 50%;
         transform: translateY(-50%);
         cursor: pointer;
@@ -54,6 +52,18 @@ button {
     border-radius: var(--border-radius-m);
     padding: 10px 20px;
     cursor: pointer;
+}
+
+
+.graph-wrapper {
+    position: relative;
+}
+
+.delete-btn {
+    position: absolute;
+    padding-inline: 10px;
+    top: 10px;
+    right: 10px;
 }
 
 .graph {

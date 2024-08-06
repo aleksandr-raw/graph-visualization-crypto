@@ -1,28 +1,31 @@
-# Getting Started with Create React App
+## Инструкция по запуску проекта
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. Откройте консоль и перейдите в папку `test`:
+    ```sh
+    cd test
+    ```
+   Установите зависимости (если не установлены):
+    ```sh
+    npm install
+    ```
 
-## Available Scripts
+2. Запустите сервер:
+    ```sh
+    npm start
+    ```
+   Сервер запустится на порту `3000`.
 
-In the project directory, you can run:
+3. Откройте новую консоль.
 
-### `npm start`
+   Установите зависимости основного проекта (если еще не установлены):
+    ```sh
+    npm install
+    ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. Запустите проект:
+    ```sh
+    npm start
+    ```
 
 # Тестовое задание: реализация графа связей
 

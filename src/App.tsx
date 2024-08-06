@@ -25,7 +25,7 @@ export const App = () => {
     const [mainAddresses, setMainAddresses] = useState<string[]>([]);
     const svgRef = useRef<SVGSVGElement | null>(null);
     const zoomRef = useRef<ZoomTransform | null>(null);
-    const [address, setAddress] = useState<string>('');
+    const [address, setAddress] = useState<string>('0x');
     const [nodePositions, setNodePositions] = useState<{ [key: string]: { x: number, y: number } }>({});
     const [groupedNodes, setGroupedNodes] = useState<string[]>([])
     const [getMessages, {data: newGraphData}] = useGetMessagesMutation();
@@ -33,6 +33,22 @@ export const App = () => {
 
     const dispatch = useDispatch();
     const graphData = useSelector(selectGraphData);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value;
+
+        if (!value.startsWith('0x')) {
+            value = '0x' + value.replace(/^0x/, '');
+        }
+
+        if (value.length > 18) {
+            value = value.slice(0, 18);
+        }
+        value = value.slice(0, 2) + value.slice(2).toUpperCase();
+
+        setAddress(value);
+    };
+
     const deleteData = () => {
         dispatch(deleteGraphData());
     }
@@ -245,17 +261,19 @@ export const App = () => {
         <div className="App">
             <div className={"controls-wrapper"}>
                 <div className={'input-wrapper'}>
-                    <input type="text" onChange={(e) => setAddress(e.target.value)} value={address}/>
-                    <span className={'clear-btn'} onClick={() => setAddress('')}>X</span>
+                    <input type="text" onChange={handleInputChange} value={address}/>
+                    <span className={'clear-btn'} onClick={() => setAddress('0x')}>X</span>
                 </div>
                 <button onClick={() => {
                     handleMainAddresses(address);
                     getMessages(address)
                 }}>Get data
                 </button>
-                <button onClick={deleteData}>Clear</button>
             </div>
-            <svg className={'graph'} ref={svgRef}></svg>
+            <div className={'graph-wrapper'}>
+                <button className={'delete-btn'} onClick={deleteData}>Clear</button>
+                <svg className={'graph'} ref={svgRef}></svg>
+            </div>
         </div>
     );
 }
