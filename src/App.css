@@ -17,22 +17,24 @@
 
 .controls-wrapper {
     display: flex;
-    height: var(--controls-height);
+    flex-wrap: wrap;
+    min-height: var(--controls-height);
     background-color: var(--main-bg-color);
     border-radius: var(--border-radius);
-    margin-bottom: 5px;
+    align-items: center;
+    gap: 10px;
+    margin: 5px;
+    padding: 10px;
 }
 
 .input-wrapper {
     position: relative;
 
     & input {
-        margin: 10px;
         padding: 10px;
         border-radius: var(--border-radius-m);
         border: 1px solid dimgray;
         width: 200px;
-        text-align: center;
     }
 
     & .clear-btn {
@@ -50,7 +52,6 @@ button {
     color: white;
     border: none;
     border-radius: var(--border-radius-m);
-    margin: 10px;
     padding: 10px 20px;
     cursor: pointer;
 }
